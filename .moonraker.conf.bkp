@@ -1,0 +1,77 @@
+[server]
+host = 0.0.0.0
+port = 7125
+klippy_uds_address = /tmp/klippy_uds
+enable_debug_logging = False
+max_upload_size = 1024
+
+[file_manager]
+config_path = ~/klipper_config
+log_path = ~/klipper_logs
+enable_object_processing = False
+queue_gcode_uploads = True
+
+[authorization]
+cors_domains = 
+	https://my.mainsail.xyz
+	http://my.mainsail.xyz
+	http://*.local
+	http://*.lan
+trusted_clients = 
+	10.0.0.0/8
+	127.0.0.0/8
+	169.254.0.0/16
+	172.16.0.0/12
+	192.168.0.0/16
+	FE80::/10
+	::1/128
+
+[octoprint_compat]
+
+[history]
+
+[update_manager]
+refresh_interval = 168
+
+[update_manager mainsail]
+type = web
+repo = mainsail-crew/mainsail
+path = ~/mainsail
+
+[job_queue]
+load_on_startup = True
+
+[power printer]
+type = gpio
+pin = gpiochip0/gpio26
+off_when_shutdown = True
+off_when_shutdown_delay = 1
+locked_while_printing = True
+restart_klipper_when_powered = True
+restart_delay = 1
+initial_state = off
+
+[power light]
+type = gpio
+pin = !gpiochip0/gpio13
+off_when_shutdown = False
+locked_while_printing = False
+restart_klipper_when_powered = False
+initial_state = off
+
+[power fan]
+type = gpio
+pin = !gpiochip0/gpio12
+off_when_shutdown = False
+locked_while_printing = False
+restart_klipper_when_powered = False
+initial_state = off
+
+[power DFU]
+type = gpio
+pin = !gpiochip0/gpio19
+off_when_shutdown = False
+locked_while_printing = True
+restart_klipper_when_powered = False
+initial_state = off
+
