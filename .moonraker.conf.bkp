@@ -1,22 +1,22 @@
 [server]
 host = 0.0.0.0
 port = 7125
-klippy_uds_address = /tmp/klippy_uds
-enable_debug_logging = False
+klippy_uds_address = ~/printer_data/comms/klippy.sock
 max_upload_size = 1024
 
 [file_manager]
-config_path = ~/klipper_config
-log_path = ~/klipper_logs
 enable_object_processing = False
 queue_gcode_uploads = True
 
+[job_queue]
+load_on_startup = True
+automatic_transition = False
+
 [authorization]
 cors_domains = 
-	https://my.mainsail.xyz
-	http://my.mainsail.xyz
-	http://*.local
-	http://*.lan
+	*://my.mainsail.xyz
+	*://*.local
+	*://*.lan
 trusted_clients = 
 	10.0.0.0/8
 	127.0.0.0/8
@@ -30,28 +30,32 @@ trusted_clients =
 
 [history]
 
+[announcements]
+subscriptions = 
+	mainsail
+
 [update_manager]
 refresh_interval = 168
+enable_auto_refresh = True
 
 [update_manager mainsail]
 type = web
+channel = stable
 repo = mainsail-crew/mainsail
 path = ~/mainsail
 
-[job_queue]
-load_on_startup = True
-
 [power printer]
+on_when_job_queued = True
 type = gpio
 pin = gpiochip0/gpio26
 off_when_shutdown = True
 off_when_shutdown_delay = 1
 locked_while_printing = True
-restart_klipper_when_powered = True
-restart_delay = 1
+restart_klipper_when_powered = False
 initial_state = off
 
 [power light]
+on_when_job_queued = True
 type = gpio
 pin = !gpiochip0/gpio13
 off_when_shutdown = False
@@ -60,6 +64,7 @@ restart_klipper_when_powered = False
 initial_state = off
 
 [power fan]
+on_when_job_queued = True
 type = gpio
 pin = !gpiochip0/gpio12
 off_when_shutdown = False
@@ -68,10 +73,23 @@ restart_klipper_when_powered = False
 initial_state = off
 
 [power DFU]
+on_when_job_queued = False
 type = gpio
 pin = !gpiochip0/gpio19
 off_when_shutdown = False
 locked_while_printing = True
 restart_klipper_when_powered = False
 initial_state = off
+
+[timelapse]
+output_path = ~/timelapse/
+frame_path = /tmp/timelapse/
+ffmpeg_binary_path = /usr/bin/ffmpeg
+
+[update_manager timelapse]
+type = git_repo
+primary_branch = main
+path = ~/moonraker-timelapse
+origin = https://github.com/mainsail-crew/moonraker-timelapse.git
+managed_services = klipper moonraker
 

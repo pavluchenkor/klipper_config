@@ -1,0 +1,156 @@
+[server]
+host: 0.0.0.0
+port: 7125
+# klippy_uds_address: ~/printer_data/comms/klippy.sock
+klippy_uds_address: /tmp/klippy_uds
+enable_debug_logging: False
+max_upload_size: 1024
+
+[file_manager]
+config_path: ~/klipper_config
+log_path: ~/klipper_logs
+# post processing for object cancel. Not recommended for low resource SBCs such as a Pi Zero. Default False 
+enable_object_processing: False
+queue_gcode_uploads: True
+
+[job_queue]
+load_on_startup: True
+automatic_transition: False
+
+
+[authorization]
+cors_domains:
+    *://my.mainsail.xyz
+    *://*.local
+    *://*.lan
+trusted_clients:
+    10.0.0.0/8
+    127.0.0.0/8
+    169.254.0.0/16
+    172.16.0.0/12
+    192.168.0.0/16
+    FE80::/10
+    ::1/128
+
+
+# enables partial support of Octoprint API
+[octoprint_compat]
+
+# enables moonraker to track and store print history.
+[history]
+
+# this enables moonraker announcements for mainsail
+[announcements]
+subscriptions:
+    mainsail
+
+# this enables moonraker's update manager
+[update_manager]
+refresh_interval: 168
+enable_auto_refresh: True
+
+[update_manager mainsail]
+type: web
+channel: stable
+repo: mainsail-crew/mainsail
+path: ~/mainsail
+
+
+[power printer]
+on_when_job_queued: True
+type: gpio
+#pin: gpio26
+pin: gpiochip0/gpio26
+off_when_shutdown: True
+off_when_shutdown_delay: 1
+locked_while_printing: True
+restart_klipper_when_powered: False
+#restart_delay: 1
+initial_state: off
+
+[power light]
+on_when_job_queued: True
+type: gpio
+pin: !gpiochip0/gpio13
+off_when_shutdown: False
+#off_when_shutdown_delay: 1
+locked_while_printing: False
+restart_klipper_when_powered: False
+#restart_delay: 1
+initial_state: off
+
+[power fan]
+on_when_job_queued: True
+type: gpio
+pin: !gpiochip0/gpio12
+off_when_shutdown: False
+#off_when_shutdown_delay: 1
+locked_while_printing: False
+restart_klipper_when_powered: False
+#restart_delay: 1
+initial_state: off
+
+[power DFU]
+on_when_job_queued: False
+type: gpio
+pin: !gpiochip0/gpio19 #Relay #3
+off_when_shutdown: False
+#off_when_shutdown_delay: 1
+locked_while_printing: True
+restart_klipper_when_powered: False
+#restart_delay: 1
+initial_state: off
+
+#https://github.com/mainsail-crew/moonraker-timelapse/blob/main/docs/configuration.md
+[timelapse]
+##   Following basic configuration is default to most images and don't need
+##   to be changed in most scenarios. Only uncomment and change it if your
+##   Image differ from standart installations. In most common scenarios 
+##   a User only need [timelapse] in there configuration.
+output_path: ~/timelapse/
+##   Directory where the generated video will be saved
+frame_path: /tmp/timelapse/
+##   Directory where the temporary frames are saved
+ffmpeg_binary_path: /usr/bin/ffmpeg
+##   Directory where ffmpeg is installed
+# [timelapse] section
+
+# enabled: True
+# mode: layermacro  # добавить TIMELAPSE_TAKE_FRAME в слайсер при смене слоя или hyperlapse - съемка через установленные промежутки времени 
+# snapshoturl: http://localhost:8080/?action=snapshot
+# #gcode_verbose: True
+# parkhead: False # 'true' enables or 'false' disables verbosity of the Macros
+
+# #parkpos: back_left
+# #park_custom_pos_x: 0.0
+# #park_custom_pos_y: 0.0
+# #park_custom_pos_dz: 0.0
+# #park_travel_speed: 100
+# #park_retract_speed: 15
+# #park_extrude_speed: 15
+# #park_retract_distance: 1.0
+# #park_extrude_distance: 1.0
+# #hyperlapse_cycle: 30
+
+# autorender: True
+# constant_rate_factor: 17 # 23 "defualt" 
+# #output_framerate: 30
+# #pixelformat: yuv420p
+# #time_format_code: %Y%m%d_%H%M
+# #extraoutputparams: 
+# variable_fps: true
+# targetlength: 30
+# variable_fps_min: 5
+# variable_fps_max: 30
+# #flip_x: False
+# #flip_y: False
+# #duplicatelastframe: 0
+# previewimage: True
+# saveframes: False
+
+[update_manager timelapse]
+type: git_repo
+primary_branch: main
+path: ~/moonraker-timelapse
+origin: https://github.com/mainsail-crew/moonraker-timelapse.git
+managed_services: klipper moonraker
